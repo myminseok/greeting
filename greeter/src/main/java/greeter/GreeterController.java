@@ -16,24 +16,48 @@
 
 package greeter;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerExchangeFilterFunction;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
+
 
 @RestController
 public class GreeterController {
 
-	private final GreeterService greeter;
+    @Autowired
+	private  GreeterService greeter;
 
-	public GreeterController(GreeterService greeter) {
-		this.greeter = greeter;
-	}
+	//https://cloud.spring.io/spring-cloud-commons/reference/html/
+    @Autowired
+    //private ReactorLoadBalancerExchangeFilterFunction lbFunction;==> error
+    private LoadBalancerExchangeFilterFunction lbFunction;
 
-	@RequestMapping(value = "/hello", method = RequestMethod.GET)
-	public String hello(@RequestParam(value = "salutation", defaultValue = "Hello") String salutation, @RequestParam(value = "name", defaultValue = "Bob") String name) {
+    @RequestMapping(value = "/hello", method = RequestMethod.GET)
+	public String hello(@RequestParam(value = "salutation", defaultValue = "Hello") String salutation,
+						@RequestParam(value = "name", defaultValue = "Bob") String name) {
 		Greeting greeting = greeter.greet(salutation, name);
 		return greeting.getMessage();
+	}
+
+
+
+	@RequestMapping("/hello-registry")
+	public Mono<String> hello_registry(@RequestParam(value = "salutation", defaultValue = "Hello") String salutation,
+									   @RequestParam(value = "name", defaultValue = "Bob") String name) {
+
+		StringBuffer uri= new StringBuffer();
+		uri.append("/greeting?salutation=").append(salutation).append("&name=").append(name);
+
+		return WebClient.builder().baseUrl("https://greeter-messages")
+				.filter(lbFunction)
+				.build().get()
+				.uri(uri.toString())
+				.retrieve().bodyToMono(String.class);
 	}
 
 }

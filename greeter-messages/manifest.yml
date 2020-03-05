@@ -3,8 +3,11 @@ applications:
   - name: greeter-messages-cs
     instances: 1
     memory: 1G
-    random-route: true
+    buildpacks:
+    - java_buildpack_offline
+   # random-route: true
     services:
       - greeter-service-registry
+    path: ./target/greeter-messages-0.0.1-SNAPSHOT.jar
     env:
       SPRING_PROFILES_ACTIVE: development

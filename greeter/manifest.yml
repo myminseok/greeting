@@ -1,10 +1,9 @@
 ---
 applications:
-  - name: greeter-cs
-    instances: 1
-    memory: 1G
-    random-route: true
-    services:
-      - greeter-service-registry
-    env:
-      SPRING_PROFILES_ACTIVE: development
+- name: greeter
+  memory: 1G
+  buildpacks: 
+  - java_buildpack_offline
+  path: ././target/greeter-0.0.1-SNAPSHOT.jar
+  services:
+    - greeter-service-registry

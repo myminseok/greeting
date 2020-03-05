@@ -16,14 +16,17 @@
 
 package greeter;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.web.server.SecurityWebFilterChain;
 
+
+/*
 @Configuration
-@Profile("development")
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -34,4 +37,25 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.csrf().disable();
 	}
 
+}
+*/
+
+//https://docs.spring.io/spring-boot/docs/2.0.0.BUILD-SNAPSHOT/reference/html/boot-features-security-webflux.html
+//https://docs.spring.io/spring-security/site/docs/current/reference/html5/
+
+@EnableWebFluxSecurity
+@EnableReactiveMethodSecurity
+public class SecurityConfiguration {
+
+		@Bean
+		SecurityWebFilterChain springWebFilterChain(ServerHttpSecurity http) throws Exception {
+			return http
+					// Demonstrate that method security works
+					// Best practice to use both for defense in depth
+					.authorizeExchange(exchanges -> exchanges
+							.anyExchange().permitAll()
+					)
+					.httpBasic().disable()
+					.build();
+		}
 }
