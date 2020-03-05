@@ -1,3 +1,18 @@
+
+
+
+## call `greeter-messages` backend registered in spring-cloud-registry via `RestTemplate`
+
+https://greeter.apps.pcfdemo.net/hello
+
+
+
+## call `greeter-messages` backend registered in spring-cloud-registry via `WebClient`
+
+https://greeter.apps.pcfdemo.net/hello-webclient
+
+
+
 :imagesdir: docs/images
 
 image:https://circleci.com/gh/spring-cloud-services-samples/greeting.svg?style=svg["CircleCI", link="https://circleci.com/gh/spring-cloud-services-samples/greeting"]

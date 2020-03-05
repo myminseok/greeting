@@ -46,8 +46,8 @@ public class GreeterController {
 
 
 
-	@RequestMapping("/hello-registry")
-	public Mono<String> hello_registry(@RequestParam(value = "salutation", defaultValue = "Hello") String salutation,
+	@RequestMapping("/hello-webclient")
+	public Mono<String> helloWebclient(@RequestParam(value = "salutation", defaultValue = "Hello") String salutation,
 									   @RequestParam(value = "name", defaultValue = "Bob") String name) {
 
 		StringBuffer uri= new StringBuffer();
